@@ -124,6 +124,16 @@ export default function ClientDetail() {
           </div>
         </div>
         <div className="detail-header-right">
+          {client.slackChannelId && (
+            <a
+              href={`https://app.slack.com/client/T/${client.slackChannelId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="quick-link-btn"
+            >
+              💬 Slack
+            </a>
+          )}
           {client.url && (
             <a href={client.url} target="_blank" rel="noopener noreferrer" className="quick-link-btn">
               📋 Notion
