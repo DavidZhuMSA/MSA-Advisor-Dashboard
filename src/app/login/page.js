@@ -33,7 +33,7 @@ export default function LoginPage() {
   return (
     <div className="login-page">
       <div className="login-card">
-        <div className="login-logo">M</div>
+        <img src="/msa-logo.png" alt="MSA" className="login-logo" />
         <h1 className="login-title">Advisor Dashboard</h1>
         <p className="login-subtitle">Montserrat Advisory</p>
 

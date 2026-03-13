@@ -12,7 +12,7 @@ export default function NavbarWrapper() {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <div className="navbar-logo">M</div>
+        <img src="/msa-logo.png" alt="MSA" className="navbar-logo" />
         <div>
           <div className="navbar-title">Advisor Dashboard</div>
           <div className="navbar-subtitle">Montserrat Advisory</div>
