@@ -128,9 +128,10 @@ export default function CommandCenter() {
           vb = b.name?.toLowerCase() || "";
           return sortDir === "asc" ? va.localeCompare(vb) : vb.localeCompare(va);
         case "module":
-          va = a.module || "";
-          vb = b.module || "";
-          return sortDir === "asc" ? va.localeCompare(vb) : vb.localeCompare(va);
+          const modOrder = { FL: 0, M: 1, S: 2, A: 3 };
+          va = modOrder[a.module] ?? 4;
+          vb = modOrder[b.module] ?? 4;
+          break;
         default:
           va = riskOrder[a.riskClassification] ?? 4;
           vb = riskOrder[b.riskClassification] ?? 4;
