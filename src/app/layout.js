@@ -5,6 +5,10 @@ import NavbarWrapper from "./components/NavbarWrapper";
 export const metadata = {
   title: "MSA Advisor Dashboard",
   description: "Real-time client monitoring for Montserrat Advisory",
+  icons: {
+    icon: "/msa-logo.png",
+    apple: "/msa-logo.png",
+  },
 };
 
 export default function RootLayout({ children }) {
