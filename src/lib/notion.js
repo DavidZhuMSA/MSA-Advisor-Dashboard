@@ -94,8 +94,11 @@ function parseArchSubmission(page) {
       getText(p.submission_name?.title) ||
       getText(p.Name?.title) ||
       "Untitled",
-    submittedAt: page.created_time,
+    submittedAt: p.submitted_date?.date?.start || page.created_time,
     assetType: p.asset_type?.select?.name || "—",
+    completionStatus: p.completion_status?.select?.name || "Submitted",
+    clientId: p.client?.relation?.[0]?.id || null,
+    module: p.module?.select?.name || "—",
   };
 }
 
@@ -142,6 +145,22 @@ export async function getArchitectureSubmissions(clientId) {
       filter: {
         property: "client",
         relation: { contains: clientId },
+      },
+      sorts: [{ timestamp: "created_time", direction: "descending" }],
+    }
+  );
+  return data.results.map(parseArchSubmission);
+}
+
+export async function getPendingSubmissions() {
+  const data = await notionFetch(
+    `/databases/${process.env.NOTION_ARCHITECTURE_DB}/query`,
+    {
+      filter: {
+        or: [
+          { property: "completion_status", select: { equals: "Submitted" } },
+          { property: "completion_status", select: { equals: "Flagged" } },
+        ],
       },
       sorts: [{ timestamp: "created_time", direction: "descending" }],
     }

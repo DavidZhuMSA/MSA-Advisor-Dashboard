@@ -47,6 +47,7 @@ export default function CommandCenter() {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [actionItems, setActionItems] = useState(null);
   const [sortKey, setSortKey] = useState("risk");
   const [sortDir, setSortDir] = useState("asc");
   const router = useRouter();
@@ -74,6 +75,11 @@ export default function CommandCenter() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
+
+    fetch("/api/action-items")
+      .then((r) => r.json())
+      .then((data) => setActionItems(data))
+      .catch(() => {});
   }, [status, router]);
 
   function handleSort(key) {
@@ -233,6 +239,70 @@ export default function CommandCenter() {
           <div className="kpi-sub">multiplier</div>
         </div>
       </div>
+
+      {/* Action Items */}
+      {actionItems && actionItems.totalActionItems > 0 && (
+        <div className="action-items-section">
+          <div className="section-title" style={{ marginBottom: "16px" }}>
+            Action Items
+            <span className="action-count">{actionItems.totalActionItems}</span>
+          </div>
+          <div className="action-items-grid">
+            {actionItems.pendingSubmissions?.map((sub) => (
+              <a
+                key={sub.id}
+                href={`https://notion.so/${sub.id.replace(/-/g, "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`action-item ${sub.completionStatus === "Flagged" ? "action-flagged" : "action-pending"}`}
+              >
+                <div className="action-item-icon">
+                  {sub.completionStatus === "Flagged" ? "🚩" : "📐"}
+                </div>
+                <div className="action-item-content">
+                  <div className="action-item-title">{sub.name}</div>
+                  <div className="action-item-meta">
+                    {sub.clientName} · {sub.completionStatus}
+                  </div>
+                </div>
+                <span className="arch-link-icon">↗</span>
+              </a>
+            ))}
+            {actionItems.overdueSnapshots?.map((c) => (
+              <div
+                key={`snap-${c.id}`}
+                className="action-item action-overdue"
+                onClick={() => router.push(`/client/${c.id}`)}
+                style={{ cursor: "pointer" }}
+              >
+                <div className="action-item-icon">📊</div>
+                <div className="action-item-content">
+                  <div className="action-item-title">Performance Snapshot Overdue</div>
+                  <div className="action-item-meta">
+                    {c.name} · {c.daysSince} days ago
+                  </div>
+                </div>
+              </div>
+            ))}
+            {actionItems.overdueArchitecture?.map((c) => (
+              <div
+                key={`arch-${c.id}`}
+                className="action-item action-overdue"
+                onClick={() => router.push(`/client/${c.id}`)}
+                style={{ cursor: "pointer" }}
+              >
+                <div className="action-item-icon">📐</div>
+                <div className="action-item-content">
+                  <div className="action-item-title">Architecture Submission Overdue</div>
+                  <div className="action-item-meta">
+                    {c.name} · {c.daysSince} days ago
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Client Table */}
       <div className="table-container">

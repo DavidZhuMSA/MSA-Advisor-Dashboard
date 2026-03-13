@@ -974,6 +974,91 @@ h3 { font-size: 1.1rem; font-weight: 600; }
   opacity: 1;
 }
 
+/* ============ ACTION ITEMS ============ */
+.action-items-section {
+  margin-bottom: 32px;
+}
+
+.action-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-red);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.action-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 12px;
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  border-left: 4px solid var(--border-subtle);
+  transition: var(--transition-smooth);
+  text-decoration: none;
+  color: inherit;
+}
+
+.action-item:hover {
+  border-color: var(--msa-orange);
+  background: rgba(232, 98, 42, 0.04);
+  transform: translateY(-1px);
+}
+
+.action-flagged {
+  border-left-color: var(--color-red);
+  background: rgba(239, 68, 68, 0.04);
+}
+
+.action-pending {
+  border-left-color: var(--color-yellow);
+}
+
+.action-overdue {
+  border-left-color: var(--color-orange);
+}
+
+.action-item-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.action-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.action-item-title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.action-item-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
 /* ============ ONBOARD BUTTON ============ */
 .onboard-btn {
   display: inline-flex;
