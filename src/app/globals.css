@@ -988,6 +988,31 @@ h3 { font-size: 1.1rem; font-weight: 600; }
   opacity: 1;
 }
 
+/* ============ ONBOARD BUTTON ============ */
+.onboard-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: var(--msa-orange);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  white-space: nowrap;
+}
+
+.onboard-btn:hover {
+  background: var(--msa-orange-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(232, 98, 42, 0.3);
+}
+
 @media (max-width: 768px) {
   .login-card {
     padding: 32px 24px;

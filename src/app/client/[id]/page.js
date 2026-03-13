@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 function getHealthColor(score) {
   if (score == null) return "var(--text-muted)";
@@ -41,14 +42,29 @@ function Skeleton({ width, height }) {
 export default function ClientDetail() {
   const { id } = useParams();
   const router = useRouter();
+  const { status } = useSession();
   const [client, setClient] = useState(null);
   const [snapshots, setSnapshots] = useState([]);
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace("/login");
+    }
+  }, [status, router]);
+
+  useEffect(() => {
+    if (status !== "authenticated") return;
+
     fetch(`/api/clients/${id}`)
-      .then((r) => r.json())
+      .then((r) => {
+        if (r.status === 401) {
+          router.replace("/login");
+          return {};
+        }
+        return r.json();
+      })
       .then((data) => {
         setClient(data.client);
         setSnapshots(data.snapshots || []);
@@ -56,7 +72,7 @@ export default function ClientDetail() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [id]);
+  }, [id, status, router]);
 
   if (loading) {
     return (

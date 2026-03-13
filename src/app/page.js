@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 function getRiskBadgeClass(risk) {
   switch (risk) {
@@ -42,22 +43,38 @@ function Skeleton({ width, height }) {
 }
 
 export default function CommandCenter() {
+  const { data: session, status } = useSession();
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState("risk");
-  const [sortDir, setSortDir] = useState("asc"); // for risk: low number = Red = top
+  const [sortDir, setSortDir] = useState("asc");
   const router = useRouter();
 
+  // Redirect to login if not authenticated
   useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace("/login");
+    }
+  }, [status, router]);
+
+  useEffect(() => {
+    if (status !== "authenticated") return;
+
     fetch("/api/clients")
-      .then((r) => r.json())
+      .then((r) => {
+        if (r.status === 401) {
+          router.replace("/login");
+          return { clients: [] };
+        }
+        return r.json();
+      })
       .then((data) => {
         setClients(data.clients || []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [status, router]);
 
   function handleSort(key) {
     if (sortKey === key) {
@@ -76,7 +93,6 @@ export default function CommandCenter() {
   const filtered = useMemo(() => {
     let list = [...clients];
 
-    // Search filter
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(
@@ -87,7 +103,6 @@ export default function CommandCenter() {
       );
     }
 
-    // Sort
     list.sort((a, b) => {
       let va, vb;
       switch (sortKey) {
@@ -139,7 +154,8 @@ export default function CommandCenter() {
       ? (clients.reduce((s, c) => s + (c.valueCreationScore || 0), 0) / activeCount).toFixed(1)
       : "0";
 
-  if (loading) {
+  // Show loading state while checking auth or loading data
+  if (status === "loading" || (status === "authenticated" && loading)) {
     return (
       <>
         <div className="page-header">
@@ -168,11 +184,24 @@ export default function CommandCenter() {
     );
   }
 
+  // Don't render if unauthenticated (redirect is happening)
+  if (status === "unauthenticated") return null;
+
   return (
     <>
-      <div className="page-header">
-        <h1>Command Center</h1>
-        <p>Real-time overview of your client portfolio</p>
+      <div className="page-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <div>
+          <h1>Command Center</h1>
+          <p>Real-time overview of your client portfolio</p>
+        </div>
+        <a
+          href="https://tally.so/r/eqAva0"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="onboard-btn"
+        >
+          + Onboard Client
+        </a>
       </div>
 
       {/* KPI Row */}
