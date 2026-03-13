@@ -126,7 +126,7 @@ export default function ClientDetail() {
         <div className="detail-header-right">
           {client.slackChannelId && (
             <a
-              href={`https://app.slack.com/client/T/${client.slackChannelId}`}
+              href={`https://app.slack.com/client/T088RKZQQUK/${client.slackChannelId}`}
               target="_blank"
               rel="noopener noreferrer"
               className="quick-link-btn"
