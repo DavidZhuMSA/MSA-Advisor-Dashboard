@@ -240,15 +240,15 @@ export default function CommandCenter() {
         </div>
       </div>
 
-      {/* Action Items */}
-      {actionItems && actionItems.totalActionItems > 0 && (
+      {/* Architecture Reviews */}
+      {actionItems?.pendingSubmissions?.length > 0 && (
         <div className="action-items-section">
           <div className="section-title" style={{ marginBottom: "16px" }}>
-            Action Items
-            <span className="action-count">{actionItems.totalActionItems}</span>
+            Architecture Reviews
+            <span className="action-count">{actionItems.pendingSubmissions.length}</span>
           </div>
           <div className="action-items-grid">
-            {actionItems.pendingSubmissions?.map((sub) => (
+            {actionItems.pendingSubmissions.map((sub) => (
               <a
                 key={sub.id}
                 href={`https://notion.so/${sub.id.replace(/-/g, "")}`}
@@ -268,6 +268,20 @@ export default function CommandCenter() {
                 <span className="arch-link-icon">↗</span>
               </a>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Attention Needed - Overdues */}
+      {(actionItems?.overdueSnapshots?.length > 0 || actionItems?.overdueArchitecture?.length > 0) && (
+        <div className="action-items-section">
+          <div className="section-title" style={{ marginBottom: "16px" }}>
+            Attention Needed
+            <span className="action-count" style={{ background: "var(--color-orange)" }}>
+              {(actionItems.overdueSnapshots?.length || 0) + (actionItems.overdueArchitecture?.length || 0)}
+            </span>
+          </div>
+          <div className="action-items-grid">
             {actionItems.overdueSnapshots?.map((c) => (
               <div
                 key={`snap-${c.id}`}

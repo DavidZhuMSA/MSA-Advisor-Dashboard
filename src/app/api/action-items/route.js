@@ -68,7 +68,7 @@ export async function GET() {
         overdueSnapshots.length +
         overdueArchitecture.length,
     });
-    res.headers.set("Cache-Control", "s-maxage=60, stale-while-revalidate=300");
+    res.headers.set("Cache-Control", "no-cache, no-store, must-revalidate");
     return res;
   } catch (error) {
     console.error("Error fetching action items:", error);
