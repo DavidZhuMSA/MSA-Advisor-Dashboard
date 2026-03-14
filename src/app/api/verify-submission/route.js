@@ -1,12 +1,11 @@
+import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
 
 const NOTION_KEY = process.env.NOTION_API_KEY;
 
 export async function POST(request) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
+  const session = await auth();
+  if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -20,7 +19,6 @@ export async function POST(request) {
       );
     }
 
-    // Only allow valid statuses
     const validStatuses = ["Verified", "Flagged", "Submitted"];
     if (!validStatuses.includes(status)) {
       return NextResponse.json(
