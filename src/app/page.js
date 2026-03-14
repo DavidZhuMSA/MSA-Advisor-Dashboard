@@ -159,7 +159,7 @@ export default function CommandCenter() {
           vb = b.name?.toLowerCase() || "";
           return sortDir === "asc" ? va.localeCompare(vb) : vb.localeCompare(va);
         case "module":
-          const modOrder = { FL: 0, M: 1, S: 2, A: 3 };
+          const modOrder = { FL: 0, VS: 1, M: 2, S: 3, A: 4 };
           va = modOrder[a.module] ?? 4;
           vb = modOrder[b.module] ?? 4;
           break;
