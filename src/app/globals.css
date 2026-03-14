@@ -1059,6 +1059,41 @@ h3 { font-size: 1.1rem; font-weight: 600; }
   margin-top: 2px;
 }
 
+.action-item-buttons {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  font-size: 0.85rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.action-btn:hover {
+  border-color: var(--msa-orange);
+  background: rgba(232, 98, 42, 0.08);
+  transform: scale(1.1);
+}
+
+.action-btn-verify:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* ============ ONBOARD BUTTON ============ */
 .onboard-btn {
   display: inline-flex;

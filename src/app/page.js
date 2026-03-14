@@ -50,7 +50,32 @@ export default function CommandCenter() {
   const [actionItems, setActionItems] = useState(null);
   const [sortKey, setSortKey] = useState("risk");
   const [sortDir, setSortDir] = useState("asc");
+  const [verifyingId, setVerifyingId] = useState(null);
   const router = useRouter();
+
+  async function verifySubmission(e, submissionId) {
+    e.preventDefault();
+    e.stopPropagation();
+    setVerifyingId(submissionId);
+    try {
+      const res = await fetch("/api/verify-submission", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ submissionId, status: "Verified" }),
+      });
+      if (res.ok) {
+        setActionItems((prev) => ({
+          ...prev,
+          pendingSubmissions: prev.pendingSubmissions.filter(
+            (s) => s.id !== submissionId
+          ),
+        }));
+      }
+    } catch (err) {
+      console.error("Failed to verify:", err);
+    }
+    setVerifyingId(null);
+  }
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -249,11 +274,8 @@ export default function CommandCenter() {
           </div>
           <div className="action-items-grid">
             {actionItems.pendingSubmissions.map((sub) => (
-              <a
+              <div
                 key={sub.id}
-                href={`https://notion.so/${sub.id.replace(/-/g, "")}`}
-                target="_blank"
-                rel="noopener noreferrer"
                 className={`action-item ${sub.completionStatus === "Flagged" ? "action-flagged" : "action-pending"}`}
               >
                 <div className="action-item-icon">
@@ -265,8 +287,26 @@ export default function CommandCenter() {
                     {sub.clientName} · {sub.completionStatus}
                   </div>
                 </div>
-                <span className="arch-link-icon">↗</span>
-              </a>
+                <div className="action-item-buttons">
+                  <a
+                    href={`https://notion.so/${sub.id.replace(/-/g, "")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="action-btn action-btn-view"
+                    title="Open in Notion"
+                  >
+                    ↗
+                  </a>
+                  <button
+                    className="action-btn action-btn-verify"
+                    onClick={(e) => verifySubmission(e, sub.id)}
+                    disabled={verifyingId === sub.id}
+                    title="Mark as Verified"
+                  >
+                    {verifyingId === sub.id ? "⏳" : "✅"}
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
         </div>
