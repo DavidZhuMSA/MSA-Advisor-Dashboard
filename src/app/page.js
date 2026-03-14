@@ -51,6 +51,7 @@ export default function CommandCenter() {
   const [sortKey, setSortKey] = useState("risk");
   const [sortDir, setSortDir] = useState("asc");
   const [verifyingId, setVerifyingId] = useState(null);
+  const [selectedSubmission, setSelectedSubmission] = useState(null);
   const router = useRouter();
 
   async function verifySubmission(e, submissionId) {
@@ -277,6 +278,8 @@ export default function CommandCenter() {
               <div
                 key={sub.id}
                 className={`action-item ${sub.completionStatus === "Flagged" ? "action-flagged" : "action-pending"}`}
+                onClick={() => setSelectedSubmission(sub)}
+                style={{ cursor: "pointer" }}
               >
                 <div className="action-item-icon">
                   {sub.completionStatus === "Flagged" ? "🚩" : "📐"}
@@ -287,25 +290,7 @@ export default function CommandCenter() {
                     {sub.clientName} · {sub.completionStatus}
                   </div>
                 </div>
-                <div className="action-item-buttons">
-                  <a
-                    href={`https://notion.so/${sub.id.replace(/-/g, "")}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="action-btn action-btn-view"
-                    title="Open in Notion"
-                  >
-                    ↗
-                  </a>
-                  <button
-                    className="action-btn action-btn-verify"
-                    onClick={(e) => verifySubmission(e, sub.id)}
-                    disabled={verifyingId === sub.id}
-                    title="Mark as Verified"
-                  >
-                    {verifyingId === sub.id ? "⏳" : "✅"}
-                  </button>
-                </div>
+                <span className="arch-link-icon">→</span>
               </div>
             ))}
           </div>
@@ -519,6 +504,89 @@ export default function CommandCenter() {
           </table>
         </div>
       </div>
+
+      {/* Architecture Review Modal */}
+      {selectedSubmission && (
+        <div className="review-modal-overlay" onClick={() => setSelectedSubmission(null)}>
+          <div className="review-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="review-modal-header">
+              <div>
+                <div className="review-modal-title">{selectedSubmission.name}</div>
+                <div className="review-modal-subtitle">
+                  {selectedSubmission.clientName} · {selectedSubmission.module}
+                </div>
+              </div>
+              <button className="review-modal-close" onClick={() => setSelectedSubmission(null)}>✕</button>
+            </div>
+
+            <div className="review-modal-body">
+              <div className="review-detail-grid">
+                <div className="review-detail">
+                  <div className="review-detail-label">Asset Type</div>
+                  <div className="review-detail-value">{selectedSubmission.assetType}</div>
+                </div>
+                <div className="review-detail">
+                  <div className="review-detail-label">Status</div>
+                  <div className="review-detail-value">
+                    <span className={`badge ${selectedSubmission.completionStatus === "Flagged" ? "badge-red" : "badge-yellow"}`}>
+                      {selectedSubmission.completionStatus}
+                    </span>
+                  </div>
+                </div>
+                <div className="review-detail">
+                  <div className="review-detail-label">Submitted</div>
+                  <div className="review-detail-value">
+                    {selectedSubmission.submittedAt ? new Date(selectedSubmission.submittedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}
+                  </div>
+                </div>
+                <div className="review-detail">
+                  <div className="review-detail-label">Finalized</div>
+                  <div className="review-detail-value">{selectedSubmission.finalizedConfirmed ? "✅ Yes" : "❌ No"}</div>
+                </div>
+              </div>
+
+              {selectedSubmission.contextNotes && (
+                <div className="review-notes">
+                  <div className="review-detail-label">Context Notes</div>
+                  <div className="review-notes-text">{selectedSubmission.contextNotes}</div>
+                </div>
+              )}
+
+              {selectedSubmission.assetContent && (
+                <a
+                  href={selectedSubmission.assetContent}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="review-asset-link"
+                >
+                  📎 Open Submitted Asset
+                </a>
+              )}
+            </div>
+
+            <div className="review-modal-footer">
+              <button
+                className="review-btn review-btn-verify"
+                onClick={(e) => {
+                  verifySubmission(e, selectedSubmission.id);
+                  setSelectedSubmission(null);
+                }}
+                disabled={verifyingId === selectedSubmission.id}
+              >
+                ✅ Verify
+              </button>
+              <a
+                href={`https://notion.so/${selectedSubmission.id.replace(/-/g, "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="review-btn review-btn-notion"
+              >
+                ↗ View in Notion
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

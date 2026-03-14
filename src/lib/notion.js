@@ -99,6 +99,9 @@ function parseArchSubmission(page) {
     completionStatus: p.completion_status?.select?.name || "Submitted",
     clientId: p.client?.relation?.[0]?.id || null,
     module: p.module?.select?.name || "—",
+    assetContent: p.asset_content?.url || null,
+    contextNotes: getText(p.context_notes?.rich_text),
+    finalizedConfirmed: p.finalized_confirmed?.checkbox || false,
   };
 }
 
