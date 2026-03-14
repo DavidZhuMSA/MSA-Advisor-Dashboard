@@ -974,6 +974,123 @@ h3 { font-size: 1.1rem; font-weight: 600; }
   opacity: 1;
 }
 
+/* ============ HEALTH STATUS BOARD ============ */
+.health-board-section {
+  margin-bottom: 32px;
+}
+
+.health-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.health-column {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.health-column-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.health-column-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.health-column-label {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+}
+
+.health-column-count {
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.health-column-cards {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.health-card {
+  padding: 10px 12px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  position: relative;
+}
+
+.health-card:hover {
+  border-color: var(--msa-orange);
+  background: rgba(232, 98, 42, 0.04);
+  transform: translateY(-1px);
+}
+
+.health-card-name {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.84rem;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.health-card-meta {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.health-card-score {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+
+.health-card-empty {
+  padding: 16px;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+@media (max-width: 900px) {
+  .health-board {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .health-board {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ============ ACTION ITEMS ============ */
 .action-items-section {
   margin-bottom: 32px;

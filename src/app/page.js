@@ -358,6 +358,62 @@ export default function CommandCenter() {
         </div>
       )}
 
+      {/* Health Status Board */}
+      {!loading && clients.length > 0 && (() => {
+        const columns = [
+          { key: "Green", label: "Healthy", color: "var(--color-green)" },
+          { key: "Yellow", label: "Watch", color: "var(--color-yellow)" },
+          { key: "Orange", label: "Intervention", color: "var(--color-orange)" },
+          { key: "Red", label: "Escalation", color: "var(--color-red)" },
+        ];
+        const grouped = { Green: [], Yellow: [], Orange: [], Red: [] };
+        clients.forEach((c) => {
+          const risk = c.riskClassification;
+          if (grouped[risk]) grouped[risk].push(c);
+          else grouped["Red"].push(c);
+        });
+        return (
+          <div className="health-board-section">
+            <div className="section-title" style={{ marginBottom: "16px" }}>
+              🚦 Health Status Board
+            </div>
+            <div className="health-board">
+              {columns.map((col) => (
+                <div className="health-column" key={col.key}>
+                  <div className="health-column-header">
+                    <span className="health-column-dot" style={{ background: col.color }} />
+                    <span className="health-column-label">{col.label}</span>
+                    <span className="health-column-count">{grouped[col.key].length}</span>
+                  </div>
+                  <div className="health-column-cards">
+                    {grouped[col.key].map((c) => (
+                      <div
+                        key={c.id}
+                        className="health-card"
+                        onClick={() => router.push(`/client/${c.id}`)}
+                      >
+                        <div className="health-card-name">{c.name}</div>
+                        <div className="health-card-meta">
+                          {c.company} · {c.currentModule}
+                        </div>
+                        {c.healthScore != null && (
+                          <div className="health-card-score" style={{ color: col.color }}>
+                            {c.healthScore}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                    {grouped[col.key].length === 0 && (
+                      <div className="health-card-empty">No clients</div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Client Table */}
       <div className="table-container">
         <div className="table-header">
